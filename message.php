@@ -1,3 +1,72 @@
+<?php
+
+date_default_timezone_set("Etc/GMT-8");
+
+function input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+
+include './file/conn.php';
+
+$nicknameErr=$qqErr=$mailErr=$messageErr="";
+$face=$nickname=$qq=$mail=$message="";
+$belong=null;
+$flag=1;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	
+	$face=$_POST['face'];
+	
+  if (empty($_POST['nickname'])) {
+    $nicknameErr = "昵称是必填的哟！";
+	$flag=0;
+  } else {
+    $nickname=input($_POST['nickname']);
+  }
+  
+  if (empty($_POST["qq"])) {
+    $qq = "";
+  } else {
+    	$qq = input($_POST["qq"]);
+		if(strlen($qq) < 5 || strlen($qq) > 10){
+			$qqErr = "QQ号格式错误";
+		}
+  }
+
+  if (empty($_POST["email"])) {
+    $mail = "";
+  } else {
+		$email = input($_POST["email"]);
+		if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)) {
+			$mailErr = "无效的 email 格式！";
+		}
+  }
+
+  if (empty($_POST['message-content'])) {
+	  $flag=0;
+    $messageErr = "内容都不输你留什么言呢？";
+  } else {
+    $message = input($_POST['message-content']);
+  }
+   
+
+
+$date=date('Y-n-j H:i:s');
+$sql="INSERT INTO message (face, nickname, qq, mail, message, datetime, belong)VALUES ('".$face."','".$nickname."','".$qq."','".$mail."','".$message."','".$date."','".$belong."');";
+if($flag){
+	if (!mysql_query($sql,$con))
+  	{
+  	die('Error: ' . mysql_error());
+  	}
+	$flag=0;
+	echo "<script>alert('亲爱的".$nickname."，您的留言我已收到！');</script>";
+}
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -18,6 +87,7 @@
     <![endif]-->
 </head>
 <body>
+	<a name="top"></a>
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation"><!--导航栏-->
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -52,7 +122,7 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-    <a name="top"></a>
+    
 
 
 
@@ -73,50 +143,50 @@
         </ol>
 
 
-        <form class="form-horizontal" role="form">
+        <form name="message" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" class="form-horizontal" role="form">
             <div class="form-group">
                 <label for="face" class="col-sm-2 control-label">头像:</label>
                 <div class="col-sm-10">
                     <label class="radio-inline">
-                        <input type="radio" name="face" id="face" value="face1">
-                        <img class="img-thumbnail message-face" src="img/face.jpg">
+                        <input type="radio" name="face" id="face" value="1" checked>
+                        <img class="img-thumbnail message-face" src="img/face/face1.png">
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="face" id="face2" value="face2">
-                        <img class="img-thumbnail message-face" src="img/face.jpg">
+                        <input type="radio" name="face" id="face2" value="2">
+                        <img class="img-thumbnail message-face" src="img/face/face2.png">
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="face" id="face3" value="face3">
-                        <img class="img-thumbnail message-face" src="img/face.jpg">
+                        <input type="radio" name="face" id="face3" value="3">
+                        <img class="img-thumbnail message-face" src="img/face/face3.png">
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="face" id="face4" value="face4">
-                        <img class="img-thumbnail message-face" src="img/face.jpg">
+                        <input type="radio" name="face" id="face4" value="4">
+                        <img class="img-thumbnail message-face" src="img/face/face4.png">
                     </label>
                 </div>
             </div>
             <div class="form-group">
                 <label for="nickname" class="col-sm-2 control-label">昵称:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="nickname" placeholder="Nickname">
+                    <input type="text" name="nickname" class="form-control" id="nickname" placeholder="Nickname">
                 </div>
             </div>
             <div class="form-group">
                 <label for="email" class="col-sm-2 control-label">邮箱:</label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control" id="email" placeholder="Email">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Email">
                 </div>
             </div>
             <div class="form-group">
                 <label for="qq" class="col-sm-2 control-label">QQ:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="qq" placeholder="QQ">
+                    <input type="text" name="qq" class="form-control" id="qq" placeholder="QQ">
                 </div>
             </div>
             <div class="form-group">
                 <label for="content" class="col-sm-2 control-label">内容:</label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" rows="3" id="content" placeholder="Content"></textarea>
+                    <textarea class="form-control" rows="3" name="message-content" id="content" placeholder="Content"></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -131,7 +201,7 @@
 
 
 
-        <div class="row message-row">
+        <!--<div class="row message-row">留言内容模板
             <dl class="dl-horizontal">
                 <dt class="text-center">
                     <img src="img/face.jpg" alt="" class="img-thumbnail message-face"><br />
@@ -144,22 +214,30 @@
                     </blockquote>
                 </dd>
             </dl>
-        </div>
+        </div>-->
 
-        <div class="row message-row">
-            <dl class="dl-horizontal">
-                <dt class="text-center">
-                    <img src="img/face.jpg" alt="" class="img-thumbnail message-face"><br />
-                    <span class="message-nickname">aaa</span>
-                </dt>
-                <dd>
-                    <span class="message-date">2014-12-24 20:30</span><br />
+		<?php
+			
+			$result = mysql_query("SELECT face,nickname,message,datetime FROM message WHERE belong=null or belong=0 ORDER BY datetime DESC;");
+			
+			while($row = mysql_fetch_array($result))
+			  {
+				echo '<div class="row message-row">
+            		<dl class="dl-horizontal">
+                	<dt class="text-center">
+                    <img src="img/face/face'.$row['face'].'.png" alt="" class="img-thumbnail message-face"><br />
+                    <span class="message-nickname">'.$row['nickname'].'</span></dt>';
+				echo '<dd>
+                    <span class="message-date">'.$row['datetime'].'</span><br />
                     <blockquote>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                        <p>'.$row['message'].'</p>
                     </blockquote>
-                </dd>
-            </dl>
-        </div>
+                	</dd>
+           		 	</dl>
+        			</div>';
+			  }
+			
+			?>
 
 
 
