@@ -1,3 +1,5 @@
+
+/*设置字体*/
 *{
     font-family: Arial, SimHei, monospace;
 }
@@ -5,24 +7,113 @@
 
 body{
     padding-top: 50px;
+    margin-bottom: 30px;
 }
-.navbar-brand{
+
+/*导航栏*/
+.navbar-default .navbar-toggle .icon-bar{
+    background-color: #2E6DA4;
+}
+.navbar-default .navbar-toggle{
+    border-color: #2E6DA4;
+}
+.navbar-default .navbar-brand{
     font-size: 1.8em;
+    color: #286090;
 }
-.navbar *{
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus{
     color: #337ab7;
 }
-.navbar-nav{
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus{
+    color: #286090;
+}
+.navbar-default .navbar-nav > li > a{
     font-size: 1.3em;
     color: #337ab7;
 }
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus{
+    color: #286090;
+}
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:hover,
+.navbar-default .navbar-nav>.open>a:focus{
+    color: #286090;
+}
 
+
+/*页面提示*/
 .top-tag{
-    padding: 50px 0;
+    padding: 20px 0;
+    margin-bottom: 10px;
     background-color: #337ab7;
     color: #FFFFFF;
 }
+
+
+/*内容区样式*/
+#body{
+    padding: 15px;
+}
+.col-md-4{
+    text-align: center;
+}
+a.a-button{
+    display: block;
+    padding: 20px;
+    margin: 2px auto;
+    width: 250px;
+    height: 250px;
+    color: #337ab7;
+    font-size: 24px;
+    background-color: #eeeeee;
+}
+a.a-button:hover{
+    background-color: #337ab7;
+    text-decoration: none;
+    color: #ffffff;
+}
+h1 span.glyphicon{
+    font-size: 120px;
+}
+
+
+.footer-divider{
+    margin-top: 30px;
+}
+footer{
+    margin-top: 30px;
+}
+
+
+
+img.message-face{
+    width: 50px;
+    height: 50px;
+}
+.message-date{
+    color: #888888;
+}
+
+
+/*提示框*/
+.modal-title{
+    font-size: 1.5em;
+}
+.modal-body{
+    font-size: 1.2em;
+    line-height: 1.5em;
+}
+
+
+/*宽度大于768px时不同的样式*/
 @media (min-width: 768px) {
+    .top-tag{
+        padding: 50px 0;
+    }
     .top-tag-content h1 {
         font-size: 60px;
         line-height: 1;
@@ -31,15 +122,7 @@ body{
         font-size: 22px;
         line-height: 1;
     }
-}
-
-
-
-
-.modal-title{
-    font-size: 1.5em;
-}
-.modal-body{
-    font-size: 1.2em;
-    line-height: 1.5em;
+    .footer-divider{
+        margin-top: 50px;
+    }
 }
